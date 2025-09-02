@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 1400px;
+                 background-color: #222222;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/PR_P78348", "label": "acid-sensing ion channel 1 (human)", "shape": "dot", "title": "PR_P78348\nAn acid-sensing ion channel 1 that is encoded in the genome of human.", "value": 1}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://www.ncbi.nlm.nih.gov/gene/41", "label": "ASIC1 (human)", "shape": "dot", "title": "41\nA protein coding gene ASIC1 in human."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/CLO_0009015", "label": "SH-SY5Y cell", "shape": "dot", "title": "CLO_0009015\nNone"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/GO_0001662", "label": "behavioral fear response", "shape": "dot", "title": "GO_0001662\nAn acute behavioral change resulting from a perceived external threat."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/GO_0001975", "label": "response to amphetamine", "shape": "dot", "title": "GO_0001975\nAny process that results in a change in state or activity of a cell or an organism (in terms of movement, secretion, enzyme production, gene expression, etc.) as a result of an amphetamine stimulus. Amphetamines consist of a group of compounds related to alpha-methylphenethylamine."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/GO_0005515", "label": "protein binding", "shape": "dot", "title": "GO_0005515\nBinding to a protein."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/GO_0005794", "label": "Golgi apparatus", "shape": "dot", "title": "GO_0005794\nA membrane-bound cytoplasmic organelle of the endomembrane system that further processes the core oligosaccharides (e.g. N-glycans) added to proteins in the endoplasmic reticulum and packages them into membrane-bound vesicles. The Golgi apparatus operates at the intersection of the secretory, lysosomal, and endocytic pathways."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/GO_0005886", "label": "plasma membrane", "shape": "dot", "title": "GO_0005886\nThe membrane surrounding a cell that separates the cell from its external environment. It consists of a phospholipid bilayer and associated proteins."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/GO_0005887", "label": "integral component of plasma membrane", "shape": "dot", "title": "GO_0005887\nThe component of the plasma membrane consisting of the gene products and protein complexes having at least some part of their peptide sequence embedded in the hydrophobic region of the membrane."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/GO_0006814", "label": "sodium ion transport", "shape": "dot", "title": "GO_0006814\nThe directed movement of sodium ions (Na+) into, out of or within a cell, or between cells, by means of some agent such as a transporter or pore."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/GO_0007165", "label": "signal transduction", "shape": "dot", "title": "GO_0007165\nThe cellular process in which a signal is conveyed to trigger a change in the activity or state of a cell. Signal transduction begins with reception of a signal (e.g. a ligand binding to a receptor or receptor activation by a stimulus such as light), or for signal transduction in the absence of ligand, signal-withdrawal or the activity of a constitutively active receptor. Signal transduction ends with regulation of a downstream cellular process, e.g. regulation of transcription or regulation of a metabolic process. Signal transduction covers signaling from receptors located on the surface of the cell and signaling via molecules located within the cell. For signaling between cells, signal transduction is restricted to events at and within the receiving cell."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/GO_0007613", "label": "memory", "shape": "dot", "title": "GO_0007613\nThe activities involved in the mental information processing system that receives (registers), modifies, stores, and retrieves informational stimuli. The main stages involved in the formation and retrieval of memory are encoding (processing of received information by acquisition), storage (building a permanent record of received information as a result of consolidation) and retrieval (calling back the stored information and use it in a suitable way to execute a given task)."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/GO_0008306", "label": "associative learning", "shape": "dot", "title": "GO_0008306\nLearning by associating a stimulus (the cause) with a particular outcome (the effect)."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/GO_0009268", "label": "response to pH", "shape": "dot", "title": "GO_0009268\nAny process that results in a change in state or activity of a cell or an organism (in terms of movement, secretion, enzyme production, gene expression, etc.) as a result of a pH stimulus. pH is a measure of the acidity or basicity of an aqueous solution."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/GO_0009986", "label": "cell surface", "shape": "dot", "title": "GO_0009986\nThe external part of the cell wall and/or plasma membrane."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/GO_0010447", "label": "response to acidic pH", "shape": "dot", "title": "GO_0010447\nAny process that results in a change in state or activity of a cell or an organism (in terms of movement, secretion, enzyme production, gene expression, etc.) as a result of a pH stimulus with pH \u003c 7. pH is a measure of the acidity or basicity of an aqueous solution."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/GO_0015280", "label": "ligand-gated sodium channel activity", "shape": "dot", "title": "GO_0015280\nEnables the transmembrane transfer of a sodium ion by a channel that opens when a specific ligand has been bound by the channel complex or one of its constituent parts."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/GO_0022839", "label": "ion gated channel activity", "shape": "dot", "title": "GO_0022839\nEnables the transmembrane transfer of a solute by a channel that opens in response to a specific ion stimulus."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/GO_0035725", "label": "sodium ion transmembrane transport", "shape": "dot", "title": "GO_0035725\nA process in which a sodium ion is transported from one side of a membrane to the other by means of some agent such as a transporter or pore."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/GO_0042391", "label": "regulation of membrane potential", "shape": "dot", "title": "GO_0042391\nAny process that modulates the establishment or extent of a membrane potential, the electric potential existing across any membrane arising from charges in the membrane itself and from the charges present in the media on either side of the membrane."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/GO_0044736", "label": "acid-sensing ion channel activity", "shape": "dot", "title": "GO_0044736\nEnables the transmembrane transfer of a sodium ion by a neuronal, voltage-insensitive channel that opens when an extracellular proton has been bound by the channel complex."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/GO_0045202", "label": "synapse", "shape": "dot", "title": "GO_0045202\nThe junction between an axon of one neuron and a dendrite of another neuron, a muscle fiber or a glial cell. As the axon approaches the synapse it enlarges into a specialized structure, the presynaptic terminal bouton, which contains mitochondria and synaptic vesicles. At the tip of the terminal bouton is the presynaptic membrane; facing it, and separated from it by a minute cleft (the synaptic cleft) is a specialized area of membrane on the receiving cell, known as the postsynaptic membrane. In response to the arrival of nerve impulses, the presynaptic terminal bouton secretes molecules of neurotransmitters into the synaptic cleft. These diffuse across the cleft and transmit the signal to the postsynaptic membrane."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/GO_0046929", "label": "negative regulation of neurotransmitter secretion", "shape": "dot", "title": "GO_0046929\nAny process that stops, prevents, or reduces the frequency, rate or extent of the regulated release of a neurotransmitter."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/GO_0050915", "label": "sensory perception of sour taste", "shape": "dot", "title": "GO_0050915\nThe series of events required to receive a sour taste stimulus, convert it to a molecular signal, and recognize and characterize the signal. This is a neurological process."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/GO_0070207", "label": "protein homotrimerization", "shape": "dot", "title": "GO_0070207\nThe formation of a protein homotrimer, a macromolecular structure consisting of three noncovalently associated identical subunits."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/GO_0070588", "label": "calcium ion transmembrane transport", "shape": "dot", "title": "GO_0070588\nA process in which a calcium ion is transported from one side of a membrane to the other by means of some agent such as a transporter or pore."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/GO_0071467", "label": "cellular response to pH", "shape": "dot", "title": "GO_0071467\nAny process that results in a change in state or activity of a cell (in terms of movement, secretion, enzyme production, gene expression, etc.) as a result of a pH stimulus. pH is a measure of the acidity or basicity of an aqueous solution."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/PR_P78348-1", "label": "acid-sensing ion channel 1 isoform h1 (human)", "shape": "dot", "title": "PR_P78348-1\nAn acid-sensing ion channel 1 (human) that is a translation product of some mRNA giving rise to a protein with the amino acid sequence represented by UniProtKB:P78348-1."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/PR_P78348-2", "label": "acid-sensing ion channel 1 isoform h2 (human)", "shape": "dot", "title": "PR_P78348-2\nAn acid-sensing ion channel 1 (human) that is a translation product of some mRNA giving rise to a protein with the amino acid sequence represented by UniProtKB:P78348-2."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/PR_P78348-3", "label": "acid-sensing ion channel 1 isoform h3 (human)", "shape": "dot", "title": "PR_P78348-3\nAn acid-sensing ion channel 1 (human) that is a translation product of some mRNA giving rise to a protein with the amino acid sequence represented by UniProtKB:P78348-3."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "https://reactome.org/content/detail/R-HSA-2672351", "label": "Stimuli-sensing channels", "shape": "dot", "title": "R-HSA-2672351\nNone"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "https://reactome.org/content/detail/R-HSA-382551", "label": "Transport of small molecules", "shape": "dot", "title": "R-HSA-382551\nNone"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "https://reactome.org/content/detail/R-HSA-983712", "label": "Ion channel transport", "shape": "dot", "title": "R-HSA-983712\nNone"}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "https://uswest.ensembl.org/Homo_sapiens/Transcript/Summary?t=ENST00000228468", "label": "ASIC1-201", "shape": "dot", "title": "Summary?t=ENST00000228468\nTranscript ASIC1-201 is classified as type \u0027protein_coding\u0027."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "https://uswest.ensembl.org/Homo_sapiens/Transcript/Summary?t=ENST00000447966", "label": "ASIC1-202", "shape": "dot", "title": "Summary?t=ENST00000447966\nTranscript ASIC1-202 is classified as type \u0027protein_coding\u0027."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "https://uswest.ensembl.org/Homo_sapiens/Transcript/Summary?t=ENST00000552438", "label": "ASIC1-208", "shape": "dot", "title": "Summary?t=ENST00000552438\nTranscript ASIC1-208 is classified as type \u0027protein_coding\u0027."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/UBERON_0000955", "label": "brain", "shape": "dot", "title": "UBERON_0000955\nThe brain is the center of the nervous system in all vertebrate, and most invertebrate, animals. Some primitive animals such as jellyfish and starfish have a decentralized nervous system without a brain, while sponges lack any nervous system at all. In vertebrates, the brain is located in the head, protected by the skull and close to the primary sensory apparatus of vision, hearing, balance, taste, and smell[WP]."}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "http://purl.obolibrary.org/obo/UBERON_0002371", "label": "bone marrow", "shape": "dot", "title": "UBERON_0002371\nthe soft tissue that fills the cavities of bones"}]);
+                  edges = new vis.DataSet([{"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "has gene product", "to": "http://www.ncbi.nlm.nih.gov/gene/41"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "location_of", "to": "http://purl.obolibrary.org/obo/CLO_0009015"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "has participant", "to": "http://purl.obolibrary.org/obo/GO_0001662"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "has participant", "to": "http://purl.obolibrary.org/obo/GO_0001975"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "function of", "to": "http://purl.obolibrary.org/obo/GO_0005515"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "location_of", "to": "http://purl.obolibrary.org/obo/GO_0005794"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "location_of", "to": "http://purl.obolibrary.org/obo/GO_0005886"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "location_of", "to": "http://purl.obolibrary.org/obo/GO_0005887"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "has participant", "to": "http://purl.obolibrary.org/obo/GO_0006814"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "has participant", "to": "http://purl.obolibrary.org/obo/GO_0007165"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "has participant", "to": "http://purl.obolibrary.org/obo/GO_0007613"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "has participant", "to": "http://purl.obolibrary.org/obo/GO_0008306"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "has participant", "to": "http://purl.obolibrary.org/obo/GO_0009268"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "location_of", "to": "http://purl.obolibrary.org/obo/GO_0009986"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "has participant", "to": "http://purl.obolibrary.org/obo/GO_0010447"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "function of", "to": "http://purl.obolibrary.org/obo/GO_0015280"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "function of", "to": "http://purl.obolibrary.org/obo/GO_0022839"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "has participant", "to": "http://purl.obolibrary.org/obo/GO_0035725"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "has participant", "to": "http://purl.obolibrary.org/obo/GO_0042391"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "function of", "to": "http://purl.obolibrary.org/obo/GO_0044736"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "location_of", "to": "http://purl.obolibrary.org/obo/GO_0045202"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "has participant", "to": "http://purl.obolibrary.org/obo/GO_0046929"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "has participant", "to": "http://purl.obolibrary.org/obo/GO_0050915"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "has participant", "to": "http://purl.obolibrary.org/obo/GO_0070207"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "has participant", "to": "http://purl.obolibrary.org/obo/GO_0070588"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "has participant", "to": "http://purl.obolibrary.org/obo/GO_0071467"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "subClassOf", "to": "http://purl.obolibrary.org/obo/PR_P78348-1"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "subClassOf", "to": "http://purl.obolibrary.org/obo/PR_P78348-2"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "subClassOf", "to": "http://purl.obolibrary.org/obo/PR_P78348-3"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "has participant", "to": "https://reactome.org/content/detail/R-HSA-2672351"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "has participant", "to": "https://reactome.org/content/detail/R-HSA-382551"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "has participant", "to": "https://reactome.org/content/detail/R-HSA-983712"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "ribosomally translates to", "to": "https://uswest.ensembl.org/Homo_sapiens/Transcript/Summary?t=ENST00000228468"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "ribosomally translates to", "to": "https://uswest.ensembl.org/Homo_sapiens/Transcript/Summary?t=ENST00000447966"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "ribosomally translates to", "to": "https://uswest.ensembl.org/Homo_sapiens/Transcript/Summary?t=ENST00000552438"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "location_of", "to": "http://purl.obolibrary.org/obo/UBERON_0000955"}, {"from": "http://purl.obolibrary.org/obo/PR_P78348", "title": "location_of", "to": "http://purl.obolibrary.org/obo/UBERON_0002371"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
